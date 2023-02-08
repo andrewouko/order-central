@@ -11,18 +11,11 @@ import {
   FaTwitter,
   FaUserCircle,
 } from "react-icons/fa";
-import { BsFacebook } from "react-icons/bs";
+import { BiLogIn } from "react-icons/bi";
 import Button from "@/components/form/Button";
 import Link from "next/link";
 
 const inputs: (TextInputProps | CheckboxProps)[] = [
-  {
-    name: "fullname",
-    type: "text",
-    required: true,
-    placeholder: "Enter your name",
-    label: "Full Name",
-  },
   {
     name: "email",
     type: "email",
@@ -38,31 +31,25 @@ const inputs: (TextInputProps | CheckboxProps)[] = [
     label: "Password",
   },
   {
-    name: "terms",
+    name: "remember",
     type: "checkbox",
     required: true,
-    label: (
-      <>
-        I accept the{" "}
-        <a className="font-medium text-gray-400 hover:underline" href="#">
-          Terms and Conditions
-        </a>
-      </>
+    label: (<span>Remember me</span>
     ),
     parent_div_className: "flex flex-row items-start",
     input_div_className: "mt-1",
     label_div_className: "ml-2",
     input_className:
       "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500",
-    label_className: "text-lg font-medium	text-gray-500",
+    label_className: "text-lg font-medium text-gray-500",
   },
 ];
 
-export default function Home() {
+export default function Login() {
   return (
-    <Layout title={`Registration`}>
+    <Layout title={`Login`}>
       <div className="flex flex-col content-center py-12 pr-10 pl-24">
-        <div className="w-1/2 mb-4">
+        <div className="w-1/2 mb-20">
           <Image
             src={AEDTLogo}
             alt="AEDT Logo"
@@ -70,11 +57,10 @@ export default function Home() {
           />
         </div>
         <div className="text-2xl mb-2 font-bold text-gray-500 w-full">
-          Free Sign Up
+          Sign In
         </div>
         <div className="text-base mb-6 text-gray-500">
-          Dont have an account? Create your account, it takes less than a
-          minute.
+          Enter your email address and password to access account.
         </div>
         <form className="space-y-7" action="#" method="post">
           {inputs.map((input) => {
@@ -86,11 +72,11 @@ export default function Home() {
               return TextInput(input);
             } else return Checkbox(input);
           })}
-          <Button Icon={FaUserCircle} onClick={() => {}} label={`Sign Up`} />
+          <Button Icon={BiLogIn} onClick={() => {}} label={`Log In`}/>
         </form>
         <div className="grid grid-flow-row auto-rows-max items-center place-content-center mt-8">
           <div className="flex items-center place-content-center text-gray-500 text-lg">
-            Sign up using
+            Sign in with
           </div>
           <div className="flex flex-row items-center place-content-center space-x-2 mt-4">
             <div className="border-solid border-2 border-blue-600 rounded-full p-2">
@@ -106,7 +92,7 @@ export default function Home() {
               <FaGithub className="text-zinc-600" />
             </div>
           </div>
-          <div className="mt-10">
+          <div className="mt-24">
             <span className="text-gray-400 text-sm mr-2">Already have an account?</span>
             <Link
               className="font-medium text-gray-400 hover:underline"
