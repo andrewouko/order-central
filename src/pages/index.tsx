@@ -1,19 +1,18 @@
-import Layout from "@/components/layout/Layout";
-import AEDTLogo from "../../public/images/AEDT-logo.png";
-import Image from "next/image";
-import { CheckboxProps, TextInputProps } from "@/types";
-import TextInput from "@/components/form/TextInput";
+import Button from "@/components/form/Button";
 import Checkbox from "@/components/form/Checkbox";
+import TextInput from "@/components/form/TextInput";
+import Layout from "@/components/layout/Layout";
+import { CheckboxProps, TextInputProps } from "@/types";
+import Image from "next/image";
+import Link from "next/link";
 import {
   FaFacebook,
   FaGithub,
   FaGoogle,
   FaTwitter,
-  FaUserCircle,
+  FaUserCircle
 } from "react-icons/fa";
-import { BsFacebook } from "react-icons/bs";
-import Button from "@/components/form/Button";
-import Link from "next/link";
+import AEDTLogo from "../../public/images/AEDT-logo.png";
 
 const inputs: (TextInputProps | CheckboxProps)[] = [
   {
