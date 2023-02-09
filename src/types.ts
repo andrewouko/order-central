@@ -1,3 +1,4 @@
+import { FlagComponent } from "country-flag-icons/react/3x2";
 import React from "react";
 
 type InputProps = {
@@ -25,5 +26,20 @@ export interface CheckboxProps extends InputProps {
 export interface ButtonProps {
     Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
+    label: string;
+}
+
+export interface Route {
+    path: string;
+    label: string;
+    Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+export interface DashboardProps {
+    children: React.ReactNode;
+}
+
+export interface Language {
+    Icon: FlagComponent;
     label: string;
 }

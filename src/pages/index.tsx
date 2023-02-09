@@ -2,6 +2,7 @@ import Button from "@/components/form/Button";
 import Checkbox from "@/components/form/Checkbox";
 import TextInput from "@/components/form/TextInput";
 import Layout from "@/components/layout/Layout";
+import Socials from "@/components/Socials";
 import { CheckboxProps, TextInputProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,23 +89,10 @@ export default function Home() {
           <Button Icon={FaUserCircle} onClick={() => {}} label={`Sign Up`} />
         </form>
         <div className="grid grid-flow-row auto-rows-max items-center place-content-center mt-8">
-          <div className="flex items-center place-content-center text-gray-500 text-lg">
+          <div className="flex items-center place-content-center text-gray-500 text-lg mb-4">
             Sign up using
           </div>
-          <div className="flex flex-row items-center place-content-center space-x-2 mt-4">
-            <div className="border-solid border-2 border-blue-600 rounded-full p-2">
-              <FaFacebook className="text-blue-600" />
-            </div>
-            <div className="border-solid border-2 border-red-600 rounded-full p-2">
-              <FaGoogle className="text-red-600" />
-            </div>
-            <div className="border-solid border-2 border-sky-600 rounded-full p-2">
-              <FaTwitter className="text-sky-600" />
-            </div>
-            <div className="border-solid border-2 border-zinc-600 rounded-full p-2">
-              <FaGithub className="text-zinc-600" />
-            </div>
-          </div>
+          <Socials />
           <div className="mt-10">
             <span className="text-gray-400 text-sm mr-2">Already have an account?</span>
             <Link

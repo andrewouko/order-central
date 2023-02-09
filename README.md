@@ -10,6 +10,8 @@ This project is built using NextJs (Typescript) to manage the learning resources
 
 ## Getting Started
 
+> **_NOTE:_**  You must have node installed!! <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">Install Node</a>
+
 First, install the project's dependencies:
 
 ```bash
