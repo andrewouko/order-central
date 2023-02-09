@@ -54,7 +54,7 @@ export default function Header() {
 
           <div className="relative ml-2">
             <form method="post" action="#">
-              <div className="flex flex-row">
+              <div className="flex flex-row ">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <AiOutlineSearch />
                 </div>
