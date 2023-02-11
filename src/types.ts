@@ -28,7 +28,6 @@ export interface ButtonProps {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     label: string;
 }
-
 export interface Route {
     path: string;
     label: string;
@@ -39,7 +38,32 @@ export interface DashboardProps {
     children: React.ReactNode;
 }
 
-export interface Language {
-    Icon: FlagComponent;
-    label: string;
+
+export interface ContentTitleProps {
+    title: string;
+    crumbs: string[];
+}
+
+export interface Order {
+    id: number;
+    order_num: number;
+    type: string;
+    status: "ordered" | "shipped" | "delivered";
+    created_on: Date;
+    pick_date: Date;
+    price: string;
+    from_node: string;
+    receiving_node: string;
+    category: "automatic" | "manual" | "electric" | "hydro-fueled";
+}
+
+
+export interface SearchState {
+  searchItems: Array<number>;
+}
+
+export type APIData = {
+  status: 1|0;
+  data: Order[];
+  message: string;
 }

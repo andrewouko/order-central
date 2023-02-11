@@ -1,135 +1,89 @@
-import Layout from "@/components/layout/Layout";
-import AEDTLogo from "../../public/images/AEDT-logo.png";
+import Drawer from "@material-ui/core/Drawer";
 import Image from "next/image";
-import { CheckboxProps, Language, TextInputProps } from "@/types";
-import TextInput from "@/components/form/TextInput";
-import Checkbox from "@/components/form/Checkbox";
-import {
-  FaFacebook,
-  FaGithub,
-  FaGoogle,
-  FaTwitter,
-  FaUserCircle,
-  FaCaretDown,
-  FaRegMoon,
-} from "react-icons/fa";
-import { BiLogIn } from "react-icons/bi";
-import Button from "@/components/form/Button";
-import Link from "next/link";
-import Sidebar from "./Sidebar";
-import { RxTextAlignJustify } from "react-icons/rx";
+import { it } from "node:test";
+import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { ES, FR, US } from "country-flag-icons/react/3x2";
-import { useState } from "react";
-import React from "react";
-import { MdNotificationsNone } from "react-icons/md";
-import { TbCircles } from "react-icons/tb";
-import { BsGear } from "react-icons/bs";
-import { IoMdContract } from "react-icons/io";
-const langs: Language[] = [
-  {
-    Icon: US,
-    label: "English",
-  },
-  {
-    Icon: FR,
-    label: "French",
-  },
-  {
-    Icon: ES,
-    label: "Spanish",
-  },
-];
+import { BsFilter } from "react-icons/bs";
+import { RxTextAlignJustify } from "react-icons/rx";
+import store from "store";
+import { setSearchItems } from "store/search_slice";
+
+type SearchResult = {
+  valid: Array<number>;
+  invalid: Array<number>;
+};
+
+const validateSearch = (search: string): SearchResult => {
+  let valid: Array<number> = [],
+    invalid: Array<number> = [];
+  search = search.replace(/ +/g, "");
+  valid = search
+    .split(",")
+    .filter((item) => {
+      if (item.length > 4) invalid.push(Number(item));
+      else return item;
+    })
+    .map((item) => Number(item));
+  return {
+    valid,
+    invalid,
+  };
+};
 
 export default function Header() {
-  const [lang, setLang] = useState<Language | undefined>(
-    langs.find((lang) => lang.label === "English")
-  );
-  const [langOpen, setLangOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+  const [validation_res, setValidationResults] = useState<SearchResult>();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSearch(search);
+    const validation_res = validateSearch(search);
+    setValidationResults(validation_res);
+    if (validation_res.valid.length)
+      store.dispatch(setSearchItems(validation_res.valid));
+  };
   return (
     <>
-      <header className="flex items-center justify-between px-4 py-4 bg-white">
+      <header className="flex items-center justify-between px-5 py-4 bg-white">
         <div className="flex items-center">
           <RxTextAlignJustify size={`2rem`} />
 
-          <div className="relative ml-2">
-            <form method="post" action="#">
-              <div className="flex flex-row ">
+          <div className="relative ml-2 min-w-[500px]">
+            <form method="post" onSubmit={handleSubmit}>
+              <div className="flex flex-row">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <AiOutlineSearch />
                 </div>
                 <input
                   type="search"
                   id="search"
-                  className="w-full pl-10 text-sm text-gray-500 bg-gray-200 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Search..."
+                  className="w-full pl-10 text-lg text-gray-500 bg-gray-200 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Search by item#, order#"
                   required
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setSearch(event.target.value);
+                  }}
+                  value={search}
                 />
                 <button
                   type="submit"
-                  className="text-white bg-indigo-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-4 py-2"
+                  className="text-white bg-indigo-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-base px-8 py-2"
                 >
                   Search
                 </button>
+                {validation_res?.invalid.length ? (
+                  <span className="text-sm text-red-600">{`The following search items are invalid: ${validation_res.invalid.join(
+                    ", "
+                  )}`}</span>
+                ) : null}
               </div>
             </form>
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="flex justify-center">
-            <div>
-              <div className="dropdown relative">
-                <button
-                  className="dropdown-toggle px-3 py-2.5 bg-whitetext-white font-medium text-xs leading-tight hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out flex items-center whitespace-nowrap text-gray-500"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  onClick={() => {
-                    setLangOpen(true);
-                  }}
-                >
-                  {lang && <lang.Icon className="w-5 h-5 mr-2" />}
-                  <span className="text-gray-500">{lang?.label}</span>
-                  <FaCaretDown className="w-2 ml-2" />
-                </button>
-                <ul
-                  className={`dropdown-menu w-full absolute bg-white text-base z-50 float-right py-2 list-none text-left rounded-lg shadow-lg m-0 bg-clip-padding border-none ${
-                    langOpen === false ? "hidden" : ""
-                  }`}
-                  aria-labelledby="dropdownMenuButton1"
-                >
-                  {langs
-                    .filter((l) => l.label !== lang?.label)
-                    .map((lang) => (
-                      <li key={lang.label}>
-                        <button
-                          className="dropdown-item font-normal text-sm py-2 px-4 w-full bg-transparent text-gray-700 hover:bg-gray-100 flex flex-row "
-                          onClick={() => {
-                            setLang(lang);
-                            setLangOpen(false);
-                          }}
-                        >
-                          <lang.Icon className="w-5 h-5 mr-2" />
-                          <span className="text-gray-500">{lang.label}</span>
-                        </button>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-          <button className="flex mx-4 text-gray-600 focus:outline-none relative">
-            <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-red-600 flex justify-center items-center items text-white">
-              <span>1</span>
-            </span>
-            <MdNotificationsNone className="w-7 h-7" />
-          </button>
-          <TbCircles className="w-5 h-5" />
-          <BsGear className="w-5 h-5" />
-          <FaRegMoon className="w-5 h-5" />
-          <IoMdContract className="w-5 h-5" />
+        <div className="flex items-center space-x-8">
+          {
+            <BsFilter className="w-5 h-5 text-gray-500 hover:bg-gray-600 hover:cursor-pointer hover:w-6 hover:h-6" />
+          }
           <div className="relative flex items-center">
             <button
               //   @click="dropdownOpen = !dropdownOpen"
@@ -142,9 +96,7 @@ export default function Header() {
               />
             </button>
             <div className="grid grid-flow-row auto-rows-max place-content-stretch ml-2">
-              <div className="text-sm text-gray-500 font-medium">
-                Dominic Keller
-              </div>
+              <div className="text-sm text-gray-500 font-medium">John Doe</div>
               <div className="text-xs text-gray-500 font-light">
                 Super Admin
               </div>
@@ -152,6 +104,24 @@ export default function Header() {
           </div>
         </div>
       </header>
+      <Drawer anchor={"right"} open={true} onClose={() => {}}>
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+            <tr>
+              <th>ID</th>
+              <th>Order Number</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Created On</th>
+              <th>Pick Date</th>
+              <th>Price</th>
+              <th>From Node</th>
+              <th>Receiving Node</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+        </table>
+      </Drawer>
     </>
   );
 }

@@ -24,8 +24,8 @@ export default function DashboardLayout({ children }: DashboardProps) {
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header />
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-            <div className="container pl-4 py-8">{children}</div>
+          <main className="flex-1  bg-gray-200">
+            <div className="w-full px-5 py-8">{children}</div>
           </main>
         </div>
       </div>

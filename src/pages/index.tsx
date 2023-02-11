@@ -1,109 +1,83 @@
-import Button from "@/components/form/Button";
-import Checkbox from "@/components/form/Checkbox";
-import TextInput from "@/components/form/TextInput";
-import Layout from "@/components/layout/Layout";
-import Socials from "@/components/Socials";
-import { CheckboxProps, TextInputProps } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
-import {
-  FaFacebook,
-  FaGithub,
-  FaGoogle,
-  FaTwitter,
-  FaUserCircle
-} from "react-icons/fa";
-import AEDTLogo from "../../public/images/AEDT-logo.png";
+import ContentTitle from "@/components/layout/ContentTitle";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import { APIData, Order } from "@/types";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import store from "store";
+import { selectSearch } from "../../store/search_slice";
 
-const inputs: (TextInputProps | CheckboxProps)[] = [
-  {
-    name: "fullname",
-    type: "text",
-    required: true,
-    placeholder: "Enter your name",
-    label: "Full Name",
-  },
-  {
-    name: "email",
-    type: "email",
-    required: true,
-    placeholder: "Enter your email",
-    label: "Email Address",
-  },
-  {
-    name: "password",
-    type: "password",
-    required: true,
-    placeholder: "Enter your password",
-    label: "Password",
-  },
-  {
-    name: "terms",
-    type: "checkbox",
-    required: true,
-    label: (
-      <>
-        I accept the{" "}
-        <a className="font-medium text-gray-400 hover:underline" href="#">
-          Terms and Conditions
-        </a>
-      </>
-    ),
-    parent_div_className: "flex flex-row items-start",
-    input_div_className: "mt-1",
-    label_div_className: "ml-2",
-    input_className:
-      "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500",
-    label_className: "text-lg font-medium	text-gray-500",
-  },
-];
-
-export default function Home() {
+export default function Analytics() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [filtered_orders, setFilteredOrders] = useState<Order[]>([]);
+  useEffect(() => {
+    fetch("/api/orders")
+      .then((response) => response.json())
+      .then((orders: APIData) => {
+        setOrders(orders.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+  store.subscribe(() => {
+    setFilteredOrders(
+      orders.filter((order) => {
+        return store.getState().search.searchItems.indexOf(order.id) >= 0;
+      })
+    );
+  });
   return (
-    <Layout title={`Registration`}>
-      <div className="flex flex-col content-center py-12 pr-10 pl-24">
-        <div className="w-1/2 mb-4">
-          <Image
-            src={AEDTLogo}
-            alt="AEDT Logo"
-            className="object-cover w-full  h-full"
-          />
-        </div>
-        <div className="text-2xl mb-2 font-bold text-gray-500 w-full">
-          Free Sign Up
-        </div>
-        <div className="text-base mb-6 text-gray-500">
-          Dont have an account? Create your account, it takes less than a
-          minute.
-        </div>
-        <form className="space-y-7" action="#" method="post">
-          {inputs.map((input) => {
-            if (input.type !== "checkbox") {
-              input.parent_div_className = "";
-              input.label_className = "mb-2 text-lg font-medium	text-gray-500";
-              input.input_className =
-                "bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5";
-              return TextInput(input);
-            } else return Checkbox(input);
-          })}
-          <Button Icon={FaUserCircle} onClick={() => {}} label={`Sign Up`} />
-        </form>
-        <div className="grid grid-flow-row auto-rows-max items-center place-content-center mt-8">
-          <div className="flex items-center place-content-center text-gray-500 text-lg mb-4">
-            Sign up using
+    <DashboardLayout>
+      <ContentTitle
+        title="Item Search"
+        crumbs={["Home", "OC", "Item Search"]}
+      />
+      <div className="mt-4">
+        <div className="w-full">
+          <div className="w-full">
+            {/* {filtered_orders.map((order) => {
+              console.log(order);
+              return <div key={order.id}>{order.pick_date.toString()}</div>;
+            })} */}
           </div>
-          <Socials />
-          <div className="mt-10">
-            <span className="text-gray-400 text-sm mr-2">Already have an account?</span>
-            <Link
-              className="font-medium text-gray-400 hover:underline"
-              href="/login"
-            >
-              Login
-            </Link>
-          </div>
+          <div>{`${filtered_orders.length} record(s) found`}</div>
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+              <tr>
+                <th>ID</th>
+                <th>Order Number</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Created On</th>
+                <th>Pick Date</th>
+                <th>Price</th>
+                <th>From Node</th>
+                <th>Receiving Node</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered_orders.map((order) => (
+                <tr
+                  key={order.id}
+                  className="bg-white border-b dark:bg-gray-800"
+                >
+                  <td>{order.id}</td>
+                  <td>{order.order_num}</td>
+                  <td>{order.type}</td>
+                  <td>{order.status}</td>
+                  <td>{order.created_on.toString()}</td>
+                  <td>{order.pick_date.toString()}</td>
+                  <td>{order.price}</td>
+                  <td>{order.from_node}</td>
+                  <td>{order.receiving_node}</td>
+                  <td>{order.category}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-    </Layout>
+    </DashboardLayout>
   );
 }
