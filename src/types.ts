@@ -60,6 +60,7 @@ export interface Order {
 
 export interface SearchState {
   searchItems: Array<number>;
+  category: string;
 }
 
 export type APIData = {

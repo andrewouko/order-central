@@ -22,7 +22,11 @@ export default function Analytics() {
   store.subscribe(() => {
     setFilteredOrders(
       orders.filter((order) => {
-        return store.getState().search.searchItems.indexOf(order.id) >= 0;
+        return (
+          store.getState().search.searchItems.indexOf(order.id) >= 0 ||
+          store.getState().search.searchItems.indexOf(order.order_num) >= 0 ||
+          (order.category === store.getState().search.category)
+        );
       })
     );
   });

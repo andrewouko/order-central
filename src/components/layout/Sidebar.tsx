@@ -1,27 +1,14 @@
-import Layout from "@/components/layout/Layout";
+import { Route } from "@/types";
 import Image from "next/image";
-import { CheckboxProps, Route, TextInputProps } from "@/types";
-import TextInput from "@/components/form/TextInput";
-import Checkbox from "@/components/form/Checkbox";
-import {
-  FaFacebook,
-  FaGithub,
-  FaGoogle,
-  FaRegUserCircle,
-  FaSearch,
-  FaTwitter,
-  FaUserCircle,
-} from "react-icons/fa";
-import { BiLogIn } from "react-icons/bi";
-import Button from "@/components/form/Button";
 import Link from "next/link";
-import AEDTLogo from "../../../public/images/AEDT-logo.png";
-import PlaceHolderLogo from "../../../public/images/logo.png";
-import { BiHomeAlt, BiCabinet } from "react-icons/bi";
-import { BsShieldCheck } from "react-icons/bs";
-import { RiMoneyDollarBoxLine } from "react-icons/ri";
 import { useRouter } from "next/router";
+import { BiCabinet } from "react-icons/bi";
+import {
+  FaRegUserCircle,
+  FaSearch
+} from "react-icons/fa";
 import { RxCaretRight } from "react-icons/rx";
+import PlaceHolderLogo from "../../../public/images/logo.png";
 
 const routes: Route[] = [
   {

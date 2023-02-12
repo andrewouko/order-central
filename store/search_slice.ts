@@ -4,6 +4,7 @@ import { SearchState } from "@/types";
 // slice
 const initial_state: SearchState = {
   searchItems: [],
+  category: ''
 };
 export const search_slice = createSlice({
   name: "search",
@@ -15,6 +16,12 @@ export const search_slice = createSlice({
     ) => {
       state.searchItems = action.payload;
     },
+    setFilter: (
+      state: SearchState,
+      action: { payload: string }
+    ) => {
+      state.category = action.payload;
+    },
   },
 });
 
@@ -22,7 +29,7 @@ export const search_slice = createSlice({
 export const selectSearch = (state: SearchState) => state.searchItems;
 
 // actions
-export const { setSearchItems } = search_slice.actions;
+export const { setSearchItems, setFilter } = search_slice.actions;
 
 // reducer
 export default search_slice.reducer;

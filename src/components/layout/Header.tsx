@@ -1,12 +1,13 @@
+import { InputLabel, MenuItem, Select, TextareaAutosize, TextField  } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Image from "next/image";
 import { it } from "node:test";
-import React, { useState } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilter } from "react-icons/bs";
 import { RxTextAlignJustify } from "react-icons/rx";
 import store from "store";
-import { setSearchItems } from "store/search_slice";
+import { setFilter, setSearchItems } from "store/search_slice";
 
 type SearchResult = {
   valid: Array<number>;
@@ -30,16 +31,35 @@ const validateSearch = (search: string): SearchResult => {
   };
 };
 
+const InvalidOutput = (validation_res: SearchResult | undefined) => {
+  return validation_res?.invalid.length ? (
+    <span className="text-sm text-red-600">{`The following search items are invalid: ${validation_res.invalid.join(
+      ", "
+    )}`}</span>
+  ) : null;
+};
+
 export default function Header() {
   const [search, setSearch] = useState<string>("");
   const [validation_res, setValidationResults] = useState<SearchResult>();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+  const [category, setCategory] = useState<string>();
+
+  const handleSearch = (search: string) => {
     setSearch(search);
     const validation_res = validateSearch(search);
     setValidationResults(validation_res);
     if (validation_res.valid.length)
       store.dispatch(setSearchItems(validation_res.valid));
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSearch(search);
+  };
+  const handleFilter = () => {
+    handleSearch(search);
+    if(category?.length) store.dispatch(setFilter(category));
   };
   return (
     <>
@@ -70,11 +90,7 @@ export default function Header() {
                 >
                   Search
                 </button>
-                {validation_res?.invalid.length ? (
-                  <span className="text-sm text-red-600">{`The following search items are invalid: ${validation_res.invalid.join(
-                    ", "
-                  )}`}</span>
-                ) : null}
+                {InvalidOutput(validation_res)}
               </div>
             </form>
           </div>
@@ -82,7 +98,12 @@ export default function Header() {
 
         <div className="flex items-center space-x-8">
           {
-            <BsFilter className="w-5 h-5 text-gray-500 hover:bg-gray-600 hover:cursor-pointer hover:w-6 hover:h-6" />
+            <BsFilter
+              className="w-5 h-5 text-gray-500 hover:bg-gray-600 hover:cursor-pointer hover:w-6 hover:h-6"
+              onClick={() => {
+                setDrawerOpen(!drawerOpen);
+              }}
+            />
           }
           <div className="relative flex items-center">
             <button
@@ -104,23 +125,45 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <Drawer anchor={"right"} open={true} onClose={() => {}}>
-        <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-            <tr>
-              <th>ID</th>
-              <th>Order Number</th>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Created On</th>
-              <th>Pick Date</th>
-              <th>Price</th>
-              <th>From Node</th>
-              <th>Receiving Node</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-        </table>
+      <Drawer
+        anchor={"right"}
+        open={drawerOpen}
+        onClose={() => {
+          setDrawerOpen(false);
+        }}
+        className="px-12"
+      >
+        <div className="px-12 mb-5 grid grid-rows-2 gap-4 w-[500]">
+          <TextField
+            maxRows={10}
+            aria-label="maximum height"
+            placeholder="Search by order id or order number"
+            defaultValue=""
+            style={{ width: 200 }}
+            label="Item"
+            value={search}
+          />
+          <InputLabel id="demo-simple-select-label">Category</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Category"
+            value={category}
+            onChange={(event) => {
+              setCategory(event.target.value as string);
+            }}
+          >
+            {["automatic" , "manual" , "electric" , "hydro-fueled"].map(cat => (<MenuItem key={cat} value={cat}>{cat}</MenuItem>))}
+          </Select>
+          <button
+            type="submit"
+            className="text-white bg-indigo-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-base px-8 py-2"
+            onClick={handleFilter}
+          >
+            Filter
+          </button>
+          {InvalidOutput(validation_res)}
+        </div>
       </Drawer>
     </>
   );
