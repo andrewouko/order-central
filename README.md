@@ -1,13 +1,13 @@
 
-# AEDT
-This project is built using NextJs (Typescript) to manage the learning resources on how to access education loans provided by the AFRICA DEVELOPMENT & EDUCATION TRUST
+# ORDER CENTRAL
+This project is built using NextJs (Typescript) to showcase order management using a search box and filter.
 
 # DEPENDENCIES
 1. NodeJS
 2. NextJS
 3. Tailwind CSS
 4. React Icons
-5. country-flag-icons
+5. Redux
 
 ## Getting Started
 
@@ -38,7 +38,3 @@ yarn start
 ```
 
 <p>The project is now accessible on the host: <a>http://localhost:3000</a> </p>
-
-## Pages
-1. Login - `/login`
-2. Register - `/register`
